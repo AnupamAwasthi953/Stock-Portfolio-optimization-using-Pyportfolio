@@ -1,0 +1,330 @@
+{% extends "base.html" %}
+
+{% block title %}Portfolio Optimization Results{% endblock %}
+
+{% block extra_head %}
+<style>
+    .metric-card {
+        background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+        border: 2px solid #e2e8f0;
+        transition: all 0.3s ease;
+        height: 100%;
+    }
+
+    .metric-card:hover {
+        border-color: var(--primary-color);
+        transform: translateY(-2px);
+    }
+
+    .metric-value {
+        font-size: 2rem;
+        font-weight: 700;
+        color: var(--primary-color);
+    }
+
+    .metric-label {
+        font-weight: 600;
+        color: var(--secondary-color);
+        text-transform: uppercase;
+        font-size: 0.85rem;
+        letter-spacing: 0.5px;
+    }
+
+    .chart-container {
+        background: white;
+        border-radius: 16px;
+        padding: 2rem;
+        box-shadow: 0 8px 30px rgba(0,0,0,0.08);
+        transition: all 0.3s ease;
+        height: fit-content;
+    }
+
+    .chart-container:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 15px 50px rgba(0,0,0,0.15);
+    }
+
+    .chart-title {
+        color: var(--secondary-color);
+        font-weight: 600;
+        font-size: 1.2rem;
+        margin-bottom: 1.5rem;
+        padding-bottom: 0.5rem;
+        border-bottom: 2px solid #e2e8f0;
+    }
+
+    .chart-image {
+        width: 100%;
+        height: auto;
+        border-radius: 8px;
+    }
+
+    .success-badge {
+        background: linear-gradient(135deg, var(--success-color), #059669);
+        color: white;
+        padding: 0.5rem 1rem;
+        border-radius: 50px;
+        font-weight: 600;
+        font-size: 0.9rem;
+    }
+
+    .action-buttons {
+        gap: 1rem;
+    }
+
+    .result-summary {
+        background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%);
+        border-left: 4px solid var(--primary-color);
+        border-radius: 12px;
+        padding: 2rem;
+        margin-bottom: 2rem;
+    }
+
+    .results-container {
+        animation: slideUp 0.6s ease-out;
+    }
+
+    @keyframes slideUp {
+        from {
+            opacity: 0;
+            transform: translateY(50px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .back-link {
+        transition: all 0.3s ease;
+    }
+
+    .back-link:hover {
+        transform: translateX(-5px);
+        color: var(--primary-color) !important;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+    <div class="results-container">
+        <!-- Header Section -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="d-flex align-items-center justify-content-between">
+                    <div>
+                        <h2><i class="bi bi-check-circle-fill text-success me-2"></i>Optimization Complete</h2>
+                        <p class="text-muted mb-0">Your portfolio has been optimized using Modern Portfolio Theory</p>
+                    </div>
+                    <div class="success-badge">
+                        <i class="bi bi-graph-up me-2"></i>Optimized
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Summary Metrics -->
+        <div class="result-summary">
+            <h5 class="mb-3"><i class="bi bi-bar-chart me-2"></i>Portfolio Performance Summary</h5>
+            <div class="row">
+                {% set summary_parts = summary.split(', ') %}
+                {% for part in summary_parts %}
+                    {% set metric = part.split(': ') %}
+                    <div class="col-md-4 mb-3">
+                        <div class="text-center">
+                            <div class="metric-value">{{ metric[1] if metric|length > 1 else part }}</div>
+                            <div class="metric-label">
+                                {% if 'Return' in part %}
+                                    <i class="bi bi-arrow-up me-1"></i>Annual Return
+                                {% elif 'Vol' in part %}
+                                    <i class="bi bi-activity me-1"></i>Volatility
+                                {% elif 'Sharpe' in part %}
+                                    <i class="bi bi-lightning me-1"></i>Sharpe Ratio
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <!-- Charts Section -->
+        <div class="row mb-5">
+            <div class="col-lg-6 mb-4">
+                <div class="chart-container">
+                    <h5 class="chart-title">
+                        <i class="bi bi-graph-up me-2"></i>Efficient Frontier
+                    </h5>
+                    <p class="text-muted mb-3 small">
+                        The curve shows optimal risk-return combinations. The red dot represents your optimized portfolio.
+                    </p>
+                    <img src="data:image/png;base64,{{ chart1|b64encode }}" 
+                         alt="Efficient Frontier Plot" 
+                         class="chart-image" />
+                </div>
+            </div>
+            
+            <div class="col-lg-6 mb-4">
+                <div class="chart-container">
+                    <h5 class="chart-title">
+                        <i class="bi bi-pie-chart me-2"></i>Portfolio Weights
+                    </h5>
+                    <p class="text-muted mb-3 small">
+                        Allocation percentages for each asset in your optimized portfolio.
+                    </p>
+                    <img src="data:image/png;base64,{{ chart2|b64encode }}" 
+                         alt="Portfolio Weights Bar Chart" 
+                         class="chart-image" />
+                </div>
+            </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-body text-center p-4">
+                        <h6 class="card-title mb-4">
+                            <i class="bi bi-download me-2"></i>Download Your Results
+                        </h6>
+                        <div class="d-flex justify-content-center action-buttons flex-wrap">
+                            <a href="{{ download_url }}" class="btn btn-success btn-lg me-3 mb-2">
+                                <i class="bi bi-file-earmark-spreadsheet me-2"></i>
+                                Download Portfolio Weights (CSV)
+                            </a>
+                            <button class="btn btn-outline-primary btn-lg me-3 mb-2" onclick="window.print()">
+                                <i class="bi bi-printer me-2"></i>
+                                Print Results
+                            </button>
+                            <button class="btn btn-outline-secondary btn-lg mb-2" onclick="shareResults()">
+                                <i class="bi bi-share me-2"></i>
+                                Share Results
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Navigation -->
+        <div class="row">
+            <div class="col-12 text-center">
+                <div class="d-flex justify-content-center align-items-center flex-wrap gap-3">
+                    <a href="/" class="btn btn-primary btn-lg">
+                        <i class="bi bi-arrow-left me-2"></i>
+                        Optimize Another Portfolio
+                    </a>
+                    <a href="/about" class="btn btn-outline-info btn-lg">
+                        <i class="bi bi-info-circle me-2"></i>
+                        Learn More About MPT
+                    </a>
+                </div>
+                
+                <div class="mt-4">
+                    <a href="/" class="back-link text-decoration-none">
+                        <i class="bi bi-arrow-left me-2"></i>
+                        <span>Back to Portfolio Optimizer</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Technical Details (Collapsible) -->
+        <div class="row mt-5">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <a class="btn btn-link text-decoration-none p-0" data-bs-toggle="collapse" href="#technicalDetails" role="button">
+                            <i class="bi bi-chevron-down me-2"></i>
+                            <strong>Technical Details & Methodology</strong>
+                        </a>
+                    </div>
+                    <div class="collapse" id="technicalDetails">
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <h6><i class="bi bi-gear me-2"></i>Optimization Method</h6>
+                                    <p class="small text-muted">This portfolio was optimized using Modern Portfolio Theory (MPT) with quadratic programming to minimize risk for a given return or maximize risk-adjusted returns.</p>
+                                </div>
+                                <div class="col-md-6">
+                                    <h6><i class="bi bi-calculator me-2"></i>Key Assumptions</h6>
+                                    <ul class="small text-muted">
+                                        <li>Returns are normally distributed</li>
+                                        <li>Correlations remain stable over time</li>
+                                        <li>No transaction costs considered</li>
+                                        <li>Portfolio can be rebalanced as needed</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+    // Share results function
+    function shareResults() {
+        if (navigator.share) {
+            navigator.share({
+                title: 'My Portfolio Optimization Results',
+                text: 'Check out my optimized portfolio results from the Portfolio Optimizer tool!',
+                url: window.location.href
+            }).catch(console.error);
+        } else {
+            // Fallback - copy URL to clipboard
+            navigator.clipboard.writeText(window.location.href).then(() => {
+                // Show temporary toast
+                const toast = document.createElement('div');
+                toast.className = 'position-fixed top-0 end-0 p-3';
+                toast.style.zIndex = '9999';
+                toast.innerHTML = `
+                    <div class="alert alert-success alert-dismissible" role="alert">
+                        <i class="bi bi-check-circle me-2"></i>
+                        Link copied to clipboard!
+                        <button type="button" class="btn-close" onclick="this.parentElement.parentElement.remove()"></button>
+                    </div>
+                `;
+                document.body.appendChild(toast);
+                setTimeout(() => toast.remove(), 3000);
+            }).catch(() => {
+                alert('Unable to share. Please copy the URL manually.');
+            });
+        }
+    }
+
+    // Add animation to charts when they come into view
+    const observerOptions = {
+        threshold: 0.1,
+        rootMargin: '0px 0px -50px 0px'
+    };
+
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.style.animation = 'fadeIn 0.8s ease-in-out';
+            }
+        });
+    }, observerOptions);
+
+    document.querySelectorAll('.chart-container').forEach(chart => {
+        observer.observe(chart);
+    });
+
+    // Print-specific styles
+    const printStyles = `
+        <style media="print">
+            .btn, .action-buttons, nav, footer, .collapse { display: none !important; }
+            .chart-container { break-inside: avoid; page-break-inside: avoid; }
+            body { background: white !important; }
+            .result-summary { background: #f8f9fa !important; }
+        </style>
+    `;
+    document.head.insertAdjacentHTML('beforeend', printStyles);
+</script>
+{% endblock %}
