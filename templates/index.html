@@ -1,0 +1,232 @@
+{% extends "base.html" %}
+
+{% block title %}Portfolio Optimizer - Optimize Your Investment Portfolio{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="hero-section">
+    <div class="container text-center">
+        <h1><i class="bi bi-graph-up-arrow me-3"></i>Portfolio Optimizer</h1>
+        <p class="lead">Optimize your investment portfolio using Modern Portfolio Theory</p>
+        <p>Upload your asset data and find the ideal allocation for maximum returns or minimum risk</p>
+    </div>
+</section>
+
+<div class="container mb-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card fade-in">
+                <div class="card-header text-center">
+                    <h4 class="mb-0"><i class="bi bi-upload me-2"></i>Portfolio Configuration</h4>
+                </div>
+                <div class="card-body p-4">
+                    <form action="/" method="post" enctype="multipart/form-data" id="optimizationForm">
+                        <!-- File Upload Section -->
+                        <div class="mb-4">
+                            <label for="file" class="form-label">
+                                <i class="bi bi-file-earmark-spreadsheet me-2"></i>Upload CSV File
+                                <i class="bi bi-question-circle tooltip-icon" data-bs-toggle="tooltip" 
+                                   title="Upload a CSV file containing asset prices or returns. First column should be dates, subsequent columns should be asset data."></i>
+                            </label>
+                            <input type="file" class="form-control" name="file" id="file" required accept=".csv">
+                            <div class="form-text">
+                                <i class="bi bi-info-circle me-1"></i>
+                                Supported format: CSV with dates in first column, asset data in subsequent columns
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <!-- Data Type -->
+                            <div class="col-md-6 mb-3">
+                                <label for="data_kind" class="form-label">
+                                    <i class="bi bi-graph-up me-2"></i>Data Type
+                                    <i class="bi bi-question-circle tooltip-icon" data-bs-toggle="tooltip" 
+                                       title="Choose 'Prices' if your CSV contains price data (returns will be calculated automatically). Choose 'Returns' if your data is already return data."></i>
+                                </label>
+                                <select name="data_kind" id="data_kind" class="form-select">
+                                    <option value="prices" selected>Asset Prices</option>
+                                    <option value="returns">Asset Returns</option>
+                                </select>
+                            </div>
+
+                            <!-- Frequency -->
+                            <div class="col-md-6 mb-3">
+                                <label for="freq" class="form-label">
+                                    <i class="bi bi-calendar3 me-2"></i>Data Frequency
+                                    <i class="bi bi-question-circle tooltip-icon" data-bs-toggle="tooltip" 
+                                       title="Select the frequency of your data observations for proper annualization."></i>
+                                </label>
+                                <select name="freq" id="freq" class="form-select">
+                                    <option value="daily" selected>Daily</option>
+                                    <option value="weekly">Weekly</option>
+                                    <option value="monthly">Monthly</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <!-- Risk-free Rate -->
+                            <div class="col-md-6 mb-3">
+                                <label for="rf" class="form-label">
+                                    <i class="bi bi-percent me-2"></i>Risk-free Rate (Annual)
+                                    <i class="bi bi-question-circle tooltip-icon" data-bs-toggle="tooltip" 
+                                       title="The risk-free rate used in Sharpe ratio calculations. Enter as decimal (e.g., 0.02 for 2%)."></i>
+                                </label>
+                                <div class="input-group">
+                                    <input type="number" class="form-control" name="rf" id="rf" value="0.02" step="0.001" min="0" max="1">
+                                    <span class="input-group-text">%</span>
+                                </div>
+                            </div>
+
+                            <!-- Short Selling -->
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">
+                                    <i class="bi bi-arrow-down-up me-2"></i>Investment Constraints
+                                </label>
+                                <div class="form-check form-switch mt-2">
+                                    <input class="form-check-input" type="checkbox" name="allow_short" id="allow_short">
+                                    <label class="form-check-label" for="allow_short">
+                                        Allow Short Selling
+                                        <i class="bi bi-question-circle tooltip-icon" data-bs-toggle="tooltip" 
+                                           title="Enable this to allow negative weights (short positions). Disable for long-only portfolios."></i>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Optimization Objective -->
+                        <div class="mb-4">
+                            <label for="objective" class="form-label">
+                                <i class="bi bi-target me-2"></i>Optimization Objective
+                                <i class="bi bi-question-circle tooltip-icon" data-bs-toggle="tooltip" 
+                                   title="Choose your optimization goal: Max Sharpe (best risk-adjusted return), Min Variance (lowest risk), or Target Return (specific return level)."></i>
+                            </label>
+                            <select name="objective" id="objective" class="form-select">
+                                <option value="sharpe" selected>Maximize Sharpe Ratio</option>
+                                <option value="variance">Minimize Variance</option>
+                                <option value="target">Target Return</option>
+                            </select>
+                        </div>
+
+                        <!-- Target Return (initially hidden) -->
+                        <div class="mb-4" id="targetReturnGroup" style="display: none;">
+                            <label for="target_ret" class="form-label">
+                                <i class="bi bi-bullseye me-2"></i>Target Return (Annual)
+                                <i class="bi bi-question-circle tooltip-icon" data-bs-toggle="tooltip" 
+                                   title="Specify the desired annual return as a decimal (e.g., 0.1 for 10% annual return)."></i>
+                            </label>
+                            <div class="input-group">
+                                <input type="number" class="form-control" name="target_ret" id="target_ret" 
+                                       value="0.1" step="0.01" min="-1" max="5" placeholder="e.g., 0.1 for 10%">
+                                <span class="input-group-text">%</span>
+                            </div>
+                        </div>
+
+                        <!-- Submit Button -->
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-primary btn-lg">
+                                <i class="bi bi-play-circle me-2"></i>
+                                <span class="button-text">Optimize Portfolio</span>
+                                <span class="loading-spinner spinner-border spinner-border-sm ms-2" role="status"></span>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quick Guide Section -->
+    <div class="row mt-5">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header text-center">
+                    <h5 class="mb-0"><i class="bi bi-lightbulb me-2"></i>Quick Guide</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-4 text-center mb-3">
+                            <div class="p-3">
+                                <i class="bi bi-file-earmark-arrow-up display-4 text-primary mb-3"></i>
+                                <h6>1. Upload Data</h6>
+                                <p class="small text-muted">Upload a CSV file with historical price or return data for your assets</p>
+                            </div>
+                        </div>
+                        <div class="col-md-4 text-center mb-3">
+                            <div class="p-3">
+                                <i class="bi bi-gear display-4 text-primary mb-3"></i>
+                                <h6>2. Configure</h6>
+                                <p class="small text-muted">Set your preferences for data type, frequency, and optimization objective</p>
+                            </div>
+                        </div>
+                        <div class="col-md-4 text-center mb-3">
+                            <div class="p-3">
+                                <i class="bi bi-graph-up-arrow display-4 text-primary mb-3"></i>
+                                <h6>3. Optimize</h6>
+                                <p class="small text-muted">Get optimal portfolio weights and visualizations based on Modern Portfolio Theory</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+    // Show/hide target return input based on objective selection
+    document.getElementById('objective').addEventListener('change', function() {
+        const targetGroup = document.getElementById('targetReturnGroup');
+        const targetInput = document.getElementById('target_ret');
+        
+        if (this.value === 'target') {
+            targetGroup.style.display = 'block';
+            targetInput.required = true;
+        } else {
+            targetGroup.style.display = 'none';
+            targetInput.required = false;
+        }
+    });
+
+    // Form submission with loading state
+    document.getElementById('optimizationForm').addEventListener('submit', function(e) {
+        const button = this.querySelector('button[type="submit"]');
+        const buttonText = button.querySelector('.button-text');
+        const spinner = button.querySelector('.loading-spinner');
+        
+        button.disabled = true;
+        buttonText.textContent = 'Optimizing...';
+        spinner.style.display = 'inline-block';
+    });
+
+    // File validation
+    document.getElementById('file').addEventListener('change', function(e) {
+        const file = e.target.files[0];
+        if (file && !file.name.toLowerCase().endsWith('.csv')) {
+            alert('Please select a CSV file.');
+            this.value = '';
+        }
+    });
+
+    // Format percentage inputs
+    function formatPercentage(input) {
+        const value = parseFloat(input.value);
+        if (!isNaN(value)) {
+            input.value = (value * 100).toFixed(2);
+            setTimeout(() => {
+                input.value = (value).toFixed(3);
+            }, 2000);
+        }
+    }
+
+    // Auto-format risk-free rate display
+    document.getElementById('rf').addEventListener('blur', function() {
+        const value = parseFloat(this.value);
+        if (!isNaN(value)) {
+            this.value = value.toFixed(3);
+        }
+    });
+</script>
+{% endblock %}

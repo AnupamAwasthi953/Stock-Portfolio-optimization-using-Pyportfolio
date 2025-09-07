@@ -1,0 +1,392 @@
+{% extends "base.html" %}
+
+{% block title %}About - Portfolio Optimizer{% endblock %}
+
+{% block extra_head %}
+<style>
+    .feature-card {
+        height: 100%;
+        transition: all 0.3s ease;
+        border: none;
+        background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+    }
+
+    .feature-card:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+    }
+
+    .feature-icon {
+        width: 80px;
+        height: 80px;
+        background: var(--gradient);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 1.5rem;
+        color: white;
+        font-size: 2rem;
+    }
+
+    .objective-card {
+        background: white;
+        border-radius: 16px;
+        padding: 2rem;
+        margin-bottom: 1.5rem;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+        border-left: 4px solid var(--primary-color);
+        transition: all 0.3s ease;
+    }
+
+    .objective-card:hover {
+        transform: translateX(5px);
+        box-shadow: 0 8px 25px rgba(0,0,0,0.12);
+    }
+
+    .tech-badge {
+        background: var(--gradient);
+        color: white;
+        padding: 0.5rem 1rem;
+        border-radius: 25px;
+        margin: 0.25rem;
+        display: inline-block;
+        font-weight: 500;
+        font-size: 0.9rem;
+    }
+
+    .timeline-item {
+        padding: 1.5rem;
+        border-left: 3px solid var(--primary-color);
+        margin-left: 1rem;
+        position: relative;
+        background: white;
+        border-radius: 0 12px 12px 0;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+        margin-bottom: 1.5rem;
+    }
+
+    .timeline-item::before {
+        content: '';
+        width: 15px;
+        height: 15px;
+        background: var(--primary-color);
+        border-radius: 50%;
+        position: absolute;
+        left: -9px;
+        top: 2rem;
+    }
+
+    .formula-container {
+        background: #f8fafc;
+        border-radius: 12px;
+        padding: 2rem;
+        margin: 2rem 0;
+        border: 2px solid #e2e8f0;
+        text-align: center;
+    }
+
+    .stats-card {
+        background: var(--gradient);
+        color: white;
+        border-radius: 16px;
+        padding: 2rem;
+        text-align: center;
+        height: 100%;
+    }
+
+    .stats-number {
+        font-size: 3rem;
+        font-weight: 700;
+        line-height: 1;
+    }
+
+    .stats-label {
+        font-size: 1rem;
+        opacity: 0.9;
+        margin-top: 0.5rem;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="hero-section">
+    <div class="container text-center">
+        <h1><i class="bi bi-info-circle-fill me-3"></i>About Portfolio Optimizer</h1>
+        <p class="lead">Understanding Modern Portfolio Theory and Smart Investment Allocation</p>
+        <p>Learn how our tool helps you build optimal portfolios using Nobel Prize-winning financial theory</p>
+    </div>
+</section>
+
+<div class="container mb-5">
+    <!-- Main Description -->
+    <div class="row mb-5">
+        <div class="col-lg-10 mx-auto">
+            <div class="card">
+                <div class="card-body p-5 text-center">
+                    <h3 class="mb-4">Intelligent Portfolio Optimization</h3>
+                    <p class="lead text-muted">
+                        This web application helps you optimize your investment portfolio based on 
+                        <strong>Modern Portfolio Theory (MPT)</strong>, developed by Nobel Prize winner Harry Markowitz. 
+                        By uploading a CSV file of asset prices or returns, you can find the ideal asset weights 
+                        to achieve specific investment goals while managing risk effectively.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Key Features -->
+    <div class="row mb-5">
+        <div class="col-12 text-center mb-4">
+            <h2><i class="bi bi-star-fill text-primary me-2"></i>Key Features</h2>
+            <p class="text-muted">Powerful tools for professional portfolio management</p>
+        </div>
+        
+        <div class="col-md-4 mb-4">
+            <div class="card feature-card">
+                <div class="card-body text-center p-4">
+                    <div class="feature-icon">
+                        <i class="bi bi-upload"></i>
+                    </div>
+                    <h5>Easy Data Upload</h5>
+                    <p class="text-muted">Simply upload your historical price or return data in CSV format. Supports daily, weekly, and monthly frequencies.</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-4 mb-4">
+            <div class="card feature-card">
+                <div class="card-body text-center p-4">
+                    <div class="feature-icon">
+                        <i class="bi bi-cpu"></i>
+                    </div>
+                    <h5>Advanced Optimization</h5>
+                    <p class="text-muted">Uses powerful numerical optimization algorithms (SciPy) to find mathematically optimal portfolio allocations.</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-4 mb-4">
+            <div class="card feature-card">
+                <div class="card-body text-center p-4">
+                    <div class="feature-icon">
+                        <i class="bi bi-graph-up"></i>
+                    </div>
+                    <h5>Rich Visualizations</h5>
+                    <p class="text-muted">Interactive efficient frontier plots and portfolio weight charts help you understand your investment strategy.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Optimization Objectives -->
+    <div class="row mb-5">
+        <div class="col-12 mb-4">
+            <h2 class="text-center"><i class="bi bi-target text-primary me-2"></i>Optimization Objectives</h2>
+            <p class="text-center text-muted">Choose from three powerful optimization strategies</p>
+        </div>
+        
+        <div class="col-12">
+            <div class="objective-card">
+                <div class="row align-items-center">
+                    <div class="col-md-2 text-center">
+                        <i class="bi bi-lightning-fill display-4 text-primary"></i>
+                    </div>
+                    <div class="col-md-10">
+                        <h5><strong>Maximize Sharpe Ratio</strong></h5>
+                        <p class="mb-2">Finds the portfolio with the best risk-adjusted returns. This strategy balances return maximization with risk minimization, ideal for most investors.</p>
+                        <small class="text-muted"><i class="bi bi-info-circle me-1"></i><em>Best for: General investing, retirement portfolios, balanced risk approach</em></small>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="objective-card">
+                <div class="row align-items-center">
+                    <div class="col-md-2 text-center">
+                        <i class="bi bi-shield-fill-check display-4 text-success"></i>
+                    </div>
+                    <div class="col-md-10">
+                        <h5><strong>Minimize Variance</strong></h5>
+                        <p class="mb-2">Creates the lowest-risk portfolio possible with your selected assets. Prioritizes capital preservation over high returns.</p>
+                        <small class="text-muted"><i class="bi bi-info-circle me-1"></i><em>Best for: Conservative investors, capital preservation, risk-averse strategies</em></small>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="objective-card">
+                <div class="row align-items-center">
+                    <div class="col-md-2 text-center">
+                        <i class="bi bi-bullseye display-4 text-warning"></i>
+                    </div>
+                    <div class="col-md-10">
+                        <h5><strong>Target Return</strong></h5>
+                        <p class="mb-2">Achieves a specific return level with minimum risk. You set your desired return, and the optimizer finds the safest way to reach it.</p>
+                        <small class="text-muted"><i class="bi bi-info-circle me-1"></i><em>Best for: Goal-based investing, specific return requirements, institutional mandates</em></small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Technology Stack -->
+    <div class="row mb-5">
+        <div class="col-12 text-center mb-4">
+            <h2><i class="bi bi-gear-fill text-primary me-2"></i>Technology Stack</h2>
+            <p class="text-muted">Built with industry-standard financial and scientific computing tools</p>
+        </div>
+        
+        <div class="col-lg-8 mx-auto">
+            <div class="card">
+                <div class="card-body p-4">
+                    <div class="row text-center">
+                        <div class="col-md-6 mb-3">
+                            <h6><i class="bi bi-database me-2"></i>Data Processing</h6>
+                            <div>
+                                <span class="tech-badge"><i class="bi bi-file-earmark-ruled me-1"></i>Pandas 2.0+</span>
+                                <span class="tech-badge"><i class="bi bi-calculator me-1"></i>NumPy 1.24+</span>
+                            </div>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <h6><i class="bi bi-cpu me-2"></i>Optimization</h6>
+                            <div>
+                                <span class="tech-badge"><i class="bi bi-graph-up me-1"></i>SciPy 1.10+</span>
+                                <span class="tech-badge"><i class="bi bi-pie-chart me-1"></i>Matplotlib 3.7+</span>
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <h6><i class="bi bi-globe me-2"></i>Web Framework</h6>
+                            <div>
+                                <span class="tech-badge"><i class="bi bi-server me-1"></i>Flask</span>
+                                <span class="tech-badge"><i class="bi bi-bootstrap me-1"></i>Bootstrap 5</span>
+                                <span class="tech-badge"><i class="bi bi-filetype-html me-1"></i>HTML5/CSS3</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Understanding the Charts -->
+    <div class="row mb-5">
+        <div class="col-12 text-center mb-4">
+            <h2><i class="bi bi-bar-chart text-primary me-2"></i>Understanding Your Results</h2>
+        </div>
+        
+        <div class="col-lg-6 mb-4">
+            <div class="card h-100">
+                <div class="card-body p-4">
+                    <h5><i class="bi bi-graph-up me-2 text-primary"></i>Efficient Frontier Chart</h5>
+                    <p>The <strong>Efficient Frontier</strong> shows the set of optimal portfolios that offer the highest possible expected return for each level of risk. Points on this curve represent the most efficient combinations of your assets.</p>
+                    <ul class="small text-muted">
+                        <li><strong>X-axis:</strong> Portfolio volatility (risk)</li>
+                        <li><strong>Y-axis:</strong> Expected annual return</li>
+                        <li><strong>Red dot:</strong> Your optimized portfolio</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-lg-6 mb-4">
+            <div class="card h-100">
+                <div class="card-body p-4">
+                    <h5><i class="bi bi-pie-chart me-2 text-primary"></i>Portfolio Weights Chart</h5>
+                    <p>The <strong>Weights Chart</strong> displays the percentage allocation of each asset in your optimized portfolio. These weights represent how much of your total investment should go into each asset.</p>
+                    <ul class="small text-muted">
+                        <li><strong>Positive weights:</strong> Long positions (buy and hold)</li>
+                        <li><strong>Negative weights:</strong> Short positions (if enabled)</li>
+                        <li><strong>Total:</strong> All weights sum to 100%</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Mathematical Foundation -->
+    <div class="row mb-5">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header text-center">
+                    <h4><i class="bi bi-calculator me-2"></i>Mathematical Foundation</h4>
+                </div>
+                <div class="card-body p-4">
+                    <div class="row">
+                        <div class="col-lg-8 mx-auto">
+                            <p class="text-center text-muted mb-4">
+                                Modern Portfolio Theory is built on rigorous mathematical optimization. 
+                                Here are the key formulas driving your results:
+                            </p>
+                            
+                            <div class="formula-container">
+                                <h6>Portfolio Return</h6>
+                                <p><strong>E[Rp] = Σ (wi × E[Ri])</strong></p>
+                                <small class="text-muted">Expected portfolio return equals the weighted sum of individual asset returns</small>
+                            </div>
+                            
+                            <div class="formula-container">
+                                <h6>Portfolio Risk (Variance)</h6>
+                                <p><strong>σp² = Σ Σ (wi × wj × σij)</strong></p>
+                                <small class="text-muted">Portfolio variance considers both individual asset risks and correlations between assets</small>
+                            </div>
+                            
+                            <div class="formula-container">
+                                <h6>Sharpe Ratio</h6>
+                                <p><strong>SR = (E[Rp] - Rf) / σp</strong></p>
+                                <small class="text-muted">Risk-adjusted return measure: excess return per unit of risk</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quick Stats -->
+    <div class="row mb-5">
+        <div class="col-12 text-center mb-4">
+            <h2>Why Modern Portfolio Theory Works</h2>
+        </div>
+        
+        <div class="col-md-4 mb-4">
+            <div class="stats-card">
+                <div class="stats-number">1952</div>
+                <div class="stats-label">Year MPT was developed by Harry Markowitz</div>
+            </div>
+        </div>
+        
+        <div class="col-md-4 mb-4">
+            <div class="stats-card">
+                <div class="stats-number">1990</div>
+                <div class="stats-label">Nobel Prize awarded for Portfolio Theory</div>
+            </div>
+        </div>
+        
+        <div class="col-md-4 mb-4">
+            <div class="stats-card">
+                <div class="stats-number">70+</div>
+                <div class="stats-label">Years of proven application in finance</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Getting Started -->
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-body text-center p-5">
+                    <h3 class="mb-4"><i class="bi bi-rocket-takeoff me-2 text-primary"></i>Ready to Optimize?</h3>
+                    <p class="lead text-muted mb-4">
+                        Start building your optimal portfolio in just a few clicks. Upload your data and let our advanced algorithms do the mathematical heavy lifting.
+                    </p>
+                    <a href="/" class="btn btn-primary btn-lg">
+                        <i class="bi bi-play-circle me-2"></i>
+                        Start Portfolio Optimization
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
